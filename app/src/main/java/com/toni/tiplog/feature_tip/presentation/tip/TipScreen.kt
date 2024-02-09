@@ -1,35 +1,30 @@
 package com.toni.tiplog.feature_tip.presentation.tip
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -44,7 +39,7 @@ fun TipScreen(
 ) {
 
     val state = viewModel.state
-
+    val datePickerState = rememberDatePickerState()
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -52,13 +47,40 @@ fun TipScreen(
             horizontalAlignment = Alignment.End
         ) {
             Column(
-               modifier = Modifier.weight(1f).padding(top = 60.dp)
+               modifier = Modifier
+                   .weight(1f)
+                   .padding(top = 60.dp)
             ) {
                 Text(text = "CHANGE THE DATE", color = Color.Black)
                 Spacer(modifier = Modifier.height(12.dp))
-                TipLogDatePicker(Modifier, "24/07/2022") {
-                    Log.d("toni", "click")
+                TipLogDatePicker(Modifier, state.date) {
+                   viewModel.onEvent(TipEvent.ShowDialogChange(true))
                 }
+                println()
+                if (state.showDialog){
+                    DatePickerDialog(
+                        onDismissRequest = { viewModel.onEvent(TipEvent.ShowDialogChange(false)) },
+                        confirmButton = {
+                            Button(onClick = {
+                                var dateFormatted = viewModel.formatDate(datePickerState.selectedDateMillis.toString())
+                                viewModel.onEvent(TipEvent.DateChange(dateFormatted))
+                                viewModel.onEvent(TipEvent.ShowDialogChange(false))
+                            }) {
+                                Text(text = "CONFIRM")
+                            }
+                        },
+                        dismissButton = {
+                            OutlinedButton(onClick = {
+                                viewModel.onEvent(TipEvent.ShowDialogChange(false))
+                            }) {
+                                Text(text = "CANCEL")
+                            }
+                        }
+                    ) {
+                        DatePicker(state = datePickerState)
+                    }
+               }
+
             }
 
 
@@ -84,7 +106,7 @@ fun TipScreen(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
-                    textColor = Color.Black,
+//                    textColor = Color.Black,
                     cursorColor = Color.Gray,
                     containerColor = MaterialTheme.colorScheme.secondary,
                 ),
@@ -98,7 +120,7 @@ fun TipScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp),
-                onClick = {  },
+                onClick = { viewModel.onEvent(TipEvent.SaveTip)},
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White
@@ -111,6 +133,8 @@ fun TipScreen(
                     fontWeight = FontWeight.SemiBold,
                 )
             }
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(text = state.error, color = Color.Black)
 
         }
 

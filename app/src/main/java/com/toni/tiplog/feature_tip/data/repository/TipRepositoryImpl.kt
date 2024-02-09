@@ -4,6 +4,8 @@ import com.toni.tiplog.feature_tip.data.local.TipDao
 import com.toni.tiplog.feature_tip.domain.model.Tip
 import com.toni.tiplog.feature_tip.domain.repository.TipRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 
 class TipRepositoryImpl(private val dao: TipDao): TipRepository {
     override fun getTips(): Flow<List<Tip>> {
