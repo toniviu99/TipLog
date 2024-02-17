@@ -13,13 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.toni.tiplog.feature_tip.presentation.calendar.CalendarScreen
-import com.toni.tiplog.feature_tip.presentation.history.HistoryScreen
+import com.toni.tiplog.feature_tip.presentation.month_history.MonthHistoryScreen
 import com.toni.tiplog.feature_tip.presentation.tip.TipScreen
+import com.toni.tiplog.feature_tip.presentation.tip_history.TipHistoryScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,10 +38,10 @@ fun AppNavigation() {
 
                 NavItem.values().forEach { navItem ->
                     NavigationBarItem(
-                        selected = currentDestination?.hierarchy?.any {it.route == navItem.route} == true,
+                        selected = currentDestination?.hierarchy?.any { it.route == navItem.route } == true,
                         onClick = {
-                            navController.navigate(navItem.route){
-                                popUpTo(navController.graph.findStartDestination().id){
+                            navController.navigate(navItem.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
@@ -72,7 +75,20 @@ fun AppNavigation() {
                 CalendarScreen()
             }
             composable(route = Screens.HistoryScreen.name) {
-                HistoryScreen()
+                MonthHistoryScreen(onTipHistory = {
+                    navController.navigate(Screens.TipHistoryScreen.name + "?month=$it")
+                })
+            }
+            composable(
+                route = Screens.TipHistoryScreen.name + "?month={month}",
+                arguments = listOf(navArgument("month") {
+                    type = NavType.StringType
+                })
+
+            ) {
+                TipHistoryScreen(goBack = {
+                    navController.navigate(Screens.HistoryScreen.name)
+                } )
             }
 
         }

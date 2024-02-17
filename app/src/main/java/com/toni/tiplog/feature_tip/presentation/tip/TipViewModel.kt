@@ -13,6 +13,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,6 +52,7 @@ class TipViewModel @Inject constructor(
     }
 
     private fun saveTip() {
+        val id = UUID.randomUUID().toString()
         state = state.copy(
             error = "",
             isLoading = true
@@ -62,7 +64,7 @@ class TipViewModel @Inject constructor(
         } else{
             viewModelScope.launch {
                 try {
-                    addTipUseCase(Tip(amount = state.tipAmount.toDouble(), date = state.date))
+                    addTipUseCase(Tip(id, amount = state.tipAmount.toDouble(), date = state.date))
                 } catch (e:Exception){
                     println()
                 }

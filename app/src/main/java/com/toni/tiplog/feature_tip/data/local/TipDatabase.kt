@@ -6,7 +6,7 @@ import com.toni.tiplog.feature_tip.data.local.entity.TipEntity
 import com.toni.tiplog.feature_tip.domain.model.Tip
 
 @Database(
-    entities = [Tip::class],
+    entities = [TipEntity::class],
     version = 1
 )
 abstract class TipDatabase: RoomDatabase() {

@@ -6,6 +6,9 @@ import com.toni.tiplog.feature_tip.data.local.TipDatabase
 import com.toni.tiplog.feature_tip.data.repository.TipRepositoryImpl
 import com.toni.tiplog.feature_tip.domain.repository.TipRepository
 import com.toni.tiplog.feature_tip.domain.usecase.AddTipUseCase
+import com.toni.tiplog.feature_tip.domain.usecase.DeleteTipUseCase
+import com.toni.tiplog.feature_tip.domain.usecase.GetMonthsUseCase
+import com.toni.tiplog.feature_tip.domain.usecase.GetTipsByMonthUseCase
 import com.toni.tiplog.feature_tip.domain.usecase.GetTipsUseCase
 import dagger.Module
 import dagger.Provides
@@ -43,5 +46,23 @@ object AppModule {
     @Provides
     fun provideGetTipsUseCase(repository: TipRepository):GetTipsUseCase {
         return GetTipsUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetMonthsUseCase(repository: TipRepository):GetMonthsUseCase {
+        return GetMonthsUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetTipsByMonthUseCase(repository: TipRepository):GetTipsByMonthUseCase {
+        return GetTipsByMonthUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeleteTipUseCase(repository: TipRepository):DeleteTipUseCase {
+        return DeleteTipUseCase(repository)
     }
 }
