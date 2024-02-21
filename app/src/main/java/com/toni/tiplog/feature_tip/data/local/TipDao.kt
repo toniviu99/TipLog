@@ -15,13 +15,10 @@ interface TipDao {
     @Query("SELECT * FROM TipEntity")
     fun getAllTips(): Flow<List<TipEntity>>
 
-//    @Query("SELECT DISTINCT SUBSTR(date, 4) AS month FROM TipEntity ORDER BY date ASC")
-//    fun getAllMonths(): Flow<List<String>>
-
-    @Query("SELECT DISTINCT SUBSTR(date, 4) AS month, SUM(amount) AS totalAmount FROM TipEntity GROUP BY month ORDER BY month DESC")
+    @Query("SELECT DISTINCT SUBSTR(date, 1,7) AS month, SUM(amount) AS totalAmount FROM TipEntity GROUP BY month ORDER BY month DESC")
     fun getMonthAmount(): Flow<List<MonthAmount>>
 
-    @Query("SELECT * FROM TipEntity WHERE date LIKE '%' || :month ORDER BY date DESC")
+    @Query("SELECT * FROM TipEntity WHERE date LIKE :month || '%' ORDER BY date DESC")
     fun getTipsByMonth(month: String): Flow<List<TipEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

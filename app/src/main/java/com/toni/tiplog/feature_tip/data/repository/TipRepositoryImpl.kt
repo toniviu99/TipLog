@@ -28,12 +28,12 @@ class TipRepositoryImpl(private val dao: TipDao) : TipRepository {
     }
 
     override suspend fun insertTip(tip: Tip) {
-        val entity = TipEntity(id = tip.id, amount = tip.amount, date = tip.date)
+        val entity = TipEntity(id = tip.id, amount = tip.amount, date = tip.date.toString())
         return dao.insertTip(entity)
     }
 
     override suspend fun deleteTip(tip: Tip) {
-        val entity = TipEntity(id = tip.id, amount = tip.amount, date = tip.date)
+        val entity = TipEntity(id = tip.id, amount = tip.amount, date = tip.date.toString())
         return dao.deleteTip(entity)
     }
 }

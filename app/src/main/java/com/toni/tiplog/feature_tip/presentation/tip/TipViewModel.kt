@@ -1,5 +1,6 @@
 package com.toni.tiplog.feature_tip.presentation.tip
 
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,9 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toni.tiplog.feature_tip.domain.model.Tip
 import com.toni.tiplog.feature_tip.domain.usecase.AddTipUseCase
+import com.toni.tiplog.feature_tip.domain.usecase.AmountResult
+import com.toni.tiplog.feature_tip.domain.usecase.ValidateAmountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -18,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TipViewModel @Inject constructor(
-    private val addTipUseCase: AddTipUseCase
+    private val addTipUseCase: AddTipUseCase,
+    private val validateAmountUseCase: ValidateAmountUseCase,
 ) : ViewModel() {
     var state by mutableStateOf(TipState())
         private set
@@ -47,25 +52,46 @@ class TipViewModel @Inject constructor(
                 )
             }
 
+            is TipEvent.ShowToast -> {
+                state = state.copy(
+                    showToast = event.showToast
+                )
+            }
+
             TipEvent.SaveTip -> saveTip()
+
         }
     }
 
     private fun saveTip() {
         val id = UUID.randomUUID().toString()
-        state = state.copy(
-            error = "",
-            isLoading = true
-        )
-        if (state.tipAmount == "") {
+        val amountResult = validateAmountUseCase(state.tipAmount)
+        if (amountResult is AmountResult.Invalid) {
             state = state.copy(
-                error = "Vacio"
+                error = amountResult.errorMessage
             )
-        } else{
+        } else {
+            state = state.copy(
+                isLoading = true,
+                error = ""
+            )
             viewModelScope.launch {
                 try {
-                    addTipUseCase(Tip(id, amount = state.tipAmount.toDouble(), date = state.date))
-                } catch (e:Exception){
+//                    addTipUseCase(Tip(id, amount = state.tipAmount.toDouble(), date = state.date))
+                    addTipUseCase(
+                        Tip(
+                            id,
+                            amount = state.tipAmount.toDouble(),
+                            date = LocalDate.parse(
+                                state.date,
+                                DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                            )
+                        )
+                    )
+                    state = state.copy(
+                        showToast = true
+                    )
+                } catch (e: Exception) {
                     println()
                 }
 
@@ -73,7 +99,8 @@ class TipViewModel @Inject constructor(
             }
         }
         state = state.copy(
-            isLoading = false
+            isLoading = false,
+            showToast = false
         )
 
 

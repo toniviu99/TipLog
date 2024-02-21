@@ -13,8 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.toni.tiplog.R
 import com.toni.tiplog.core.presentation.TipLogCircularProgress
 import com.toni.tiplog.core.presentation.TipLogNoTips
 import com.toni.tiplog.feature_tip.presentation.month_history.components.MonthItem
@@ -37,7 +39,7 @@ fun MonthHistoryScreen(
                 Modifier
                     .fillMaxSize()
                     .padding(start = 18.dp, end = 18.dp, top = 50.dp)) {
-                Text(text = "HISTORY", color = Color.Black)
+                Text(text = stringResource(R.string.history), color = Color.Black)
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(modifier = Modifier.fillMaxSize()){
                     items(state.months){

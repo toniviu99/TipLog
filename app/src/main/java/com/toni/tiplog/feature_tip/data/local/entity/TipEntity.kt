@@ -6,8 +6,6 @@ import com.toni.tiplog.feature_tip.domain.model.Tip
 
 @Entity
 data class TipEntity(
-//    @PrimaryKey(autoGenerate = true)
-//    val id: Int ?= null,
     @PrimaryKey(autoGenerate = false)
     val id: String,
     val amount: Double,

@@ -28,14 +28,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.toni.tiplog.R
 import com.toni.tiplog.core.presentation.TipLogDialogAlert
 import com.toni.tiplog.feature_tip.domain.model.Tip
 import com.toni.tiplog.feature_tip.presentation.tip_history.TipHistoryEvent
 import com.toni.tiplog.feature_tip.presentation.tip_history.TipHistoryViewModel
+import com.toni.tiplog.ui.theme.TipLogRed
 
 @Composable
 fun TipItem(
@@ -48,7 +52,8 @@ fun TipItem(
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 32.dp)
+            .padding(bottom = 32.dp, top = 5.dp)
+            .shadow(7.dp, shape = RoundedCornerShape(15.dp))
     ) {
         Box(
             modifier = Modifier
@@ -65,24 +70,24 @@ fun TipItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row {
-                    Text(text = tip.date, color = Color.Black, fontSize = 20.sp)
+                    Text(text = tip.date.toString(), color = Color.Black, fontSize = 20.sp)
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "${tip.amount} €", color = Color.Black, fontSize = 20.sp)
                 }
                 OutlinedButton(
                     onClick = { showDialog = true },
-                    border = BorderStroke(1.dp, Color.Red),
+                    border = BorderStroke(1.dp, TipLogRed),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.Red
+                        contentColor = TipLogRed
                     )
                 ) {
-                    Text(text = "DELETE", color = Color.Red)
+                    Text(text = stringResource(R.string.delete_button), color = Color.Red)
                 }
             }
             if (showDialog) {
                 TipLogDialogAlert(
-                    title = "CONFIRM DELETE",
-                    desc = "Are you sure you want to remove this tip?",
+                    title = stringResource(R.string.title_dialog),
+                    desc = stringResource(R.string.text_dialog),
                     onDismiss = { showDialog = false }) {
                     deleteTip()
                 }

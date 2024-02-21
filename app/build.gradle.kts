@@ -52,6 +52,7 @@ android {
     }
 }
 
+
 dependencies {
 
     //Desugaring
@@ -72,6 +73,9 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     kapt("androidx.hilt:hilt-compiler:1.1.0")
+
+    // The compose calendar library
+    implementation("com.kizitonwose.calendar:compose:2.5.0")
 
 
     implementation("androidx.core:core-ktx:1.9.0")

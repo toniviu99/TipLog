@@ -13,6 +13,8 @@ import com.toni.tiplog.feature_tip.domain.usecase.GetTipsByMonthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +46,7 @@ class TipHistoryViewModel @Inject constructor(
         state = state.copy(isLoading = true)
         viewModelScope.launch {
             if (month != null) {
-                getTipsByMonthUseCase(month).collectLatest {
+                getTipsByMonthUseCase(formatDate(month)).collectLatest {
                     state = state.copy(
                         tips = it
                     )
@@ -53,5 +55,12 @@ class TipHistoryViewModel @Inject constructor(
 
         }
         state = state.copy(isLoading = false)
+    }
+
+    private fun formatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("MM/yyyy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date)
     }
 }

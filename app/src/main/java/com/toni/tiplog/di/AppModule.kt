@@ -4,12 +4,14 @@ import android.app.Application
 import androidx.room.Room
 import com.toni.tiplog.feature_tip.data.local.TipDatabase
 import com.toni.tiplog.feature_tip.data.repository.TipRepositoryImpl
+import com.toni.tiplog.feature_tip.domain.matcher.AmountMatcher
 import com.toni.tiplog.feature_tip.domain.repository.TipRepository
 import com.toni.tiplog.feature_tip.domain.usecase.AddTipUseCase
 import com.toni.tiplog.feature_tip.domain.usecase.DeleteTipUseCase
 import com.toni.tiplog.feature_tip.domain.usecase.GetMonthsUseCase
 import com.toni.tiplog.feature_tip.domain.usecase.GetTipsByMonthUseCase
 import com.toni.tiplog.feature_tip.domain.usecase.GetTipsUseCase
+import com.toni.tiplog.feature_tip.domain.usecase.ValidateAmountUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,5 +66,11 @@ object AppModule {
     @Provides
     fun provideDeleteTipUseCase(repository: TipRepository):DeleteTipUseCase {
         return DeleteTipUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideValidateAmountUseCase():ValidateAmountUseCase {
+        return ValidateAmountUseCase()
     }
 }

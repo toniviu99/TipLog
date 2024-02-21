@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -23,6 +24,7 @@ import com.toni.tiplog.feature_tip.presentation.calendar.CalendarScreen
 import com.toni.tiplog.feature_tip.presentation.month_history.MonthHistoryScreen
 import com.toni.tiplog.feature_tip.presentation.tip.TipScreen
 import com.toni.tiplog.feature_tip.presentation.tip_history.TipHistoryScreen
+import com.toni.tiplog.ui.theme.White
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +34,7 @@ fun AppNavigation() {
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(containerColor = White) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
@@ -51,7 +53,8 @@ fun AppNavigation() {
                         icon = {
                             Icon(
                                 imageVector = navItem.selectedIcon,
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = Color.Black
                             )
                         },
                         label = {
